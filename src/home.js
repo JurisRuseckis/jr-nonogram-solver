@@ -44,6 +44,37 @@ const otherJson = {
     }
 };
 
+const averageJson = {
+    "width": 10,
+    "height": 10,
+    "instructions": {
+        "top": [
+            [1,1],
+            [5],
+            [1,5],
+            [5],
+            [1,3,1],
+            [1,3],
+            [3,2],
+            [1,2],
+            [4,2],
+            [6,3],
+        ],
+        "left": [
+            [1,1,4],
+            [1,1,2],
+            [3,1,2],
+            [3,2],
+            [3,1],
+            [5,1],
+            [4],
+            [3,1],
+            [5],
+            [6],
+        ]
+    }
+};
+
 export default function init() {
 
     document.body.style.margin = "0";
@@ -63,7 +94,7 @@ export default function init() {
     // create nonogram from json and graphic layer
     // Nonogram have init phase in constructor
     // maybe i need to create init method
-    const nonogram = new Nonogram(otherJson, layer);
+    const nonogram = new Nonogram(averageJson, layer);
 
     // add the layer to the stage
     stage.add(layer);
