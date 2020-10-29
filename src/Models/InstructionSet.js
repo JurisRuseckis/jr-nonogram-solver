@@ -44,7 +44,7 @@ export class InstructionSet{
                 return {
                     number: tile,
                     crossed: false,
-                    linkedTiles: null
+                    linkedTiles: []
                 }
             })
             this.ValidateLine(sum, line.length, this.height);
