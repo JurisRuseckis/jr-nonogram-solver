@@ -117,6 +117,7 @@ export class NonogramSolver{
         }
 
         this.nonogram.board.SetTiles(fill, coordX, coordY);
+        this.taggedLines.checked = true;
         return {
             fill: fill,
             coordX: coordX,
