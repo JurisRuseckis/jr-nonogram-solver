@@ -31,4 +31,19 @@ export class Board{
         this.grid.SetTiles(grid, startX, startY);
         this.layer.draw();
     }
+
+    GetTiles(startX, startY, endX, endY){
+        return this.grid.GetTiles(startX, startY, endX, endY);
+    }
+
+    UpdateInstructions(orientation, index, instructions){
+
+        if(orientation === GridInstructionOrientations.horizontal){
+            this.leftInstructions.UpdateInstructionsAt(index,instructions)
+        } else {
+            this.topInstructions.UpdateInstructionsAt(index,instructions)
+        }
+
+        this.layer.draw();
+    }
 }
