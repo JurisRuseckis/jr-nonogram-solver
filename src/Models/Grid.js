@@ -84,6 +84,29 @@ export class Grid{
             });
         });
     }
+    GetTiles(startX, startY, endX, endY){
+        if(startY < 0 || startY >= this.grid.length
+            || startX < 0 || startX >= this.grid[0].length
+            || endY < 0 || endY >= this.grid.length
+            || endX < 0 || endX >= this.grid[0].length){
+            throw new Error(`one of this param is out of scope: ${startX}, ${startY}, ${endX}, ${endY}`)
+        }
+
+        let results = [];
+
+        // probably the only time when its less costly to
+        if(startX === 0 && endX + 1 === this.grid.length && startY === endY){
+            return this.grid[startY];
+        }
+
+        // including last index
+        for(let i = startY; i <= endY; i++){
+            results.push(this.grid[i].slice(startX,endX+1))
+        }
+
+        return results;
+
+    }
     AddToLayer(layer){
         this.grid.map((row, rowIndex) => {
             row.map((col, colIndex) => {
