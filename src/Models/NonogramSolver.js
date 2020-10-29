@@ -58,7 +58,7 @@ export class NonogramSolver{
         let affectedTiles = this.FillLine(lineIndex);
         let affectedLineIndices = this.ResolveAffectedLines(affectedTiles);
         // cross out instructions if needed
-
+        this.CheckInstructions(affectedLineIndices);
         // add crosses where needed
         // cross out instructions cleared with crosses probably will need recursion here
 
@@ -125,11 +125,23 @@ export class NonogramSolver{
     }
 
     CheckInstructions(affectedLineIndices){
-
+        // todo: decide if this method will check filled instructions, or also link affected lines here
+        // todo: tag changed line to avoid doubling links
         affectedLineIndices.map((lineIndex) => {
             // the line
             // this.taggedLines[lineIndex];
+            this.taggedLines[lineIndex].instructions = this.taggedLines[lineIndex].instructions.map((instruction) => {
+                if(instruction.linkedTiles.length === instruction.number){
+                    console.log(instruction.linkedTiles.length, instruction.number);
+                    instruction.cross = true;
+                    instruction.crossInst.show();
+                }
+            })
 
+            this.nonogram.board.UpdateInstructions(
+                this.taggedLines[lineIndex].orientation,
+                this.taggedLines[lineIndex].index,
+                this.taggedLines[lineIndex].instructions);
         })
     }
 
