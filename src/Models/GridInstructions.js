@@ -93,6 +93,12 @@ export class GridInstructions{
         })
     }
 
+    UpdateInstructionsAt(index, instructions){
+        if(index < this.instructions.length ){
+            this.instructions[index] = instructions;
+        }
+    }
+
     AddToLayer(layer){
         this.instructions.map((line) => {
             line.map((tile) => {
