@@ -28,6 +28,7 @@ export class InstructionSet{
                 return {
                     number: tile,
                     crossed: false,
+                    linkedTiles: []
                 }
             })
             this.ValidateLine(sum, line.length, this.width);
@@ -43,6 +44,7 @@ export class InstructionSet{
                 return {
                     number: tile,
                     crossed: false,
+                    linkedTiles: null
                 }
             })
             this.ValidateLine(sum, line.length, this.height);
@@ -55,7 +57,6 @@ export class InstructionSet{
         if(this.fillsRequired.top !== this.fillsRequired.left){
             console.log(this.fillsRequired);
             throw "instruction length mismatch"
-
         }
     }
 
