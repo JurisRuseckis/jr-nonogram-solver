@@ -85,7 +85,8 @@ export class GridInstructions{
                     y: 2 + rectParams.y,
                     text: 'X',
                     fontSize: 20,
-                    visible: false
+                    visible: false,
+                    fill: 'gray'
                 });
 
                 return tile;
