@@ -23,10 +23,37 @@ export class NonogramSolver{
             : affectedLines;
 
         lines = lines.map((line) => {
-            line.minLineSum =  line.instructions.reduce((sum, instruction) => {
 
+            // grid tiles
+            let tileCounts = {
+                empty: 0,
+                filled: 0,
+                crossed: 0,
+            }
+
+            let tiles = this.GetLineTiles(line);
+
+            tiles.map((tile) => {
+                if(tile.type === tileType.cross){
+                    tileCounts.crossed ++;
+                } else if (tile.type === tileType.filled){
+                    tileCounts.filled ++;
+                } else {
+                    tileCounts.empty ++;
+                }
+            });
+
+            // instruction tiles
+            line.minLineSum =  line.instructions.reduce((sum, instruction) => {
                 return sum + instruction.number;
             }, 0) + (line.instructions.length - 1);
+
+            line.minLineSum = 0
+            line.largestInstruction = line.instructions.reduce((max, instruction) => {
+                line.minLineSum += instruction.number();
+                return Math.max( max, instruction.number );
+            }, 0)
+            line.minLineSum += line.instructions.length - 1;
 
             return line;
         })
@@ -64,11 +91,19 @@ export class NonogramSolver{
             }
         }));
 
-        taggedLines = taggedLines.sort((a,b) => {
-            return b.minLineSum - a.minLineSum;
-        });
-
         return taggedLines;
+    }
+
+    // todo: create method to setLineTiles
+    GetLineTiles(line){
+        if(line.orientation === GridInstructionOrientations.horizontal){
+            return this.nonogram.board.GetTiles(0,line.originalIndex,this.nonogram.height - 1,line.originalIndex)
+        } else {
+            // probably will need to reduce to single array to work properly
+            return this.nonogram.board.GetTiles(line.originalIndex,0,line.originalIndex,this.nonogram.width - 1).map((tile) =>{
+                return tile[0];
+            });
+        }
     }
 
     MakeMove(){
