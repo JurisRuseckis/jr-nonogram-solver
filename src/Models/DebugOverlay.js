@@ -6,12 +6,7 @@ export class DebugOverlay{
 
     prepareOverlay(){
         let tableContainer = document.createElement("div");
-        tableContainer.style.position = "absolute";
-        tableContainer.style.width = "100vw";
-        tableContainer.style.minHeight = "20px";
-        tableContainer.style.bottom = "0";
-        tableContainer.style.padding = "10px";
-        tableContainer.style.backgroundColor = "gray";
+        tableContainer.classList = "debug-overlay__container";
         return tableContainer;
     }
 
