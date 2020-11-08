@@ -31,7 +31,7 @@ export class InstructionSet{
                     linkedTiles: []
                 }
             })
-            this.ValidateLine(sum, line.length, this.width);
+            this.ValidateLine(sum, line.length, this.height);
 
             this.fillsRequired.top += sum;
             return newLine;
@@ -47,10 +47,9 @@ export class InstructionSet{
                     linkedTiles: []
                 }
             })
-            this.ValidateLine(sum, line.length, this.height);
+            this.ValidateLine(sum, line.length, this.width);
 
             this.fillsRequired.left += sum;
-
             return newLine;
         })
 
