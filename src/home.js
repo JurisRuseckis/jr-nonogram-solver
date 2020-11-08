@@ -1,3 +1,4 @@
+import css from "./styles/style.css"
 import Konva from "konva"
 import {Nonogram}  from "./Models/Nonogram";
 import {NonogramSolver}  from "./Models/NonogramSolver";
