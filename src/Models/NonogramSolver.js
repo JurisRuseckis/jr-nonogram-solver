@@ -5,19 +5,40 @@ import {DebugOverlay} from "./DebugOverlay";
 export class NonogramSolver{
     constructor(nonogram, debugOverlay) {
         this.nonogram = nonogram;
-        // will need to move some functionalities to nonogram components to ease solver
-        // probably will need to remake into partial lines to divide nonogram in smaller sectors
-        this.taggedLines = this.TagLines();
-
         this.debugOverlay = debugOverlay;
+        // todo: will need to move some functionalities to nonogram components to ease solver
+        // todo: will need to remake into partial lines to divide nonogram in smaller sectors
+        // todo: make seperate class for lines to execute lineSpecific operations
+        this.taggedLines = this.CalculateLineValues();
 
         // currently will hold whole snapshot as taggedLines, but will need to move to something like git
         // first we push initial state
         this.history = [this.taggedLines];
     }
 
-    CalculateLineValues(){
+    CalculateLineValues(affectedLines = null){
+        // if null then it is first time
+        let lines = affectedLines == null
+            ? this.TagLines()
+            : affectedLines;
+
+        lines = lines.map((line) => {
+            line.minLineSum =  line.instructions.reduce((sum, instruction) => {
+
+                return sum + instruction.number;
+            }, 0) + (line.instructions.length - 1);
+
+            return line;
+        })
+
         //this will calculate which line will be next
+        lines = lines.sort((a,b) => {
+            return b.minLineSum - a.minLineSum;
+        });
+
+        // this.PrintToDebug();
+
+        return lines;
     }
 
     TagLines(){
@@ -25,9 +46,7 @@ export class NonogramSolver{
             return {
                 // original index to find in instructionSet
                 originalIndex: lineIndex,
-                minLineSum:  line.reduce((sum, instruction) => {
-                    return sum + instruction.number;
-                }, 0) + (line.length - 1),
+                id: `H${lineIndex}`,
                 instructions: line,
                 checked: false,
                 orientation: GridInstructionOrientations.horizontal
@@ -38,9 +57,7 @@ export class NonogramSolver{
             return {
                 // original index to find in instructionSet
                 originalIndex: lineIndex,
-                minLineSum:  line.reduce((sum, instruction) => {
-                    return sum + instruction.number;
-                }, 0) + (line.length - 1),
+                id: `V${lineIndex}`,
                 instructions: line,
                 checked: false,
                 orientation: GridInstructionOrientations.vertical
