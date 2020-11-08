@@ -1,5 +1,6 @@
 import {tileType} from "./Grid";
 import {GridInstructionOrientations} from "./GridInstructions";
+import {DebugOverlay} from "./DebugOverlay";
 
 export class NonogramSolver{
     constructor(nonogram) {
@@ -7,6 +8,8 @@ export class NonogramSolver{
         // will need to move some functionalities to nonogram components to ease solver
         // probably will need to remake into partial lines to divide nonogram in smaller sectors
         this.taggedLines = this.TagLines();
+
+        this.debugOverlay = new DebugOverlay();
 
         // currently will hold whole snapshot as taggedLines, but will need to move to something like git
         // first we push initial state
@@ -156,7 +159,7 @@ export class NonogramSolver{
             // probably will need to reduce to single array to work properly
             tiles = this.nonogram.board.GetTiles(line.index,0,line.index,this.nonogram.width - 1);
         }
-
+        // todo: finish this method
         // check tiles & link
         // starting with side tiles
         // console.log(tiles);
