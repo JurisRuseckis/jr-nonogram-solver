@@ -24,7 +24,7 @@ export class NonogramSolver{
         let taggedLines = this.nonogram.instructions.left.map((line,lineIndex)=>{
             return {
                 // original index to find in instructionSet
-                index: lineIndex,
+                originalIndex: lineIndex,
                 minLineSum:  line.reduce((sum, instruction) => {
                     return sum + instruction.number;
                 }, 0) + (line.length - 1),
@@ -37,7 +37,7 @@ export class NonogramSolver{
         taggedLines = taggedLines.concat(this.nonogram.instructions.top.map((line,lineIndex)=>{
             return {
                 // original index to find in instructionSet
-                index: lineIndex,
+                originalIndex: lineIndex,
                 minLineSum:  line.reduce((sum, instruction) => {
                     return sum + instruction.number;
                 }, 0) + (line.length - 1),
@@ -91,11 +91,11 @@ export class NonogramSolver{
                     //column
                     let x = instruction.orientation === GridInstructionOrientations.horizontal
                         ? i
-                        : this.taggedLines[lineIndex].index;
+                        : this.taggedLines[lineIndex].originalIndex;
 
                     // row
                     let y = instruction.orientation === GridInstructionOrientations.horizontal
-                        ? this.taggedLines[lineIndex].index
+                        ? this.taggedLines[lineIndex].originalIndex
                         : i;
 
                     instruction.linkedTiles.push([x,y])
@@ -116,10 +116,10 @@ export class NonogramSolver{
         let coordX = 0;
         let coordY = 0;
         if(this.taggedLines[lineIndex].orientation === GridInstructionOrientations.horizontal){
-            coordY = this.taggedLines[lineIndex].index;
+            coordY = this.taggedLines[lineIndex].originalIndex;
             fill = [fill];
         } else {
-            coordX = this.taggedLines[lineIndex].index;
+            coordX = this.taggedLines[lineIndex].originalIndex;
             fill = fill.map(tile => [tile]);
         }
 
@@ -144,7 +144,7 @@ export class NonogramSolver{
 
         this.nonogram.board.UpdateInstructions(
             this.taggedLines[lineIndex].orientation,
-            this.taggedLines[lineIndex].index,
+            this.taggedLines[lineIndex].originalIndex,
             this.taggedLines[lineIndex].instructions);
     }
 
@@ -154,10 +154,10 @@ export class NonogramSolver{
         //get tiles
         let tiles;
         if(line.orientation === GridInstructionOrientations.horizontal){
-            tiles = this.nonogram.board.GetTiles(0,line.index,this.nonogram.height - 1,line.index)
+            tiles = this.nonogram.board.GetTiles(0,line.originalIndex,this.nonogram.height - 1,line.originalIndex)
         } else {
             // probably will need to reduce to single array to work properly
-            tiles = this.nonogram.board.GetTiles(line.index,0,line.index,this.nonogram.width - 1);
+            tiles = this.nonogram.board.GetTiles(line.originalIndex,0,line.originalIndex,this.nonogram.width - 1);
         }
         // todo: finish this method
         // check tiles & link
@@ -173,7 +173,7 @@ export class NonogramSolver{
             //horizontal
             // find respective line Index
             let lineIndex = this.taggedLines.findIndex((taggedLines) => taggedLines.orientation === GridInstructionOrientations.horizontal
-                && taggedLines.index === fillLineIndex+affectedTiles.coordY);
+                && taggedLines.originalIndex === fillLineIndex+affectedTiles.coordY);
 
             if(lineIndex !== -1){
                 affectedLineIndices.push(lineIndex)
@@ -182,7 +182,7 @@ export class NonogramSolver{
             // vertical lines will duplicate
             fillLine.map((tile, tileIndex) => {
                 let lineIndex = this.taggedLines.findIndex((taggedLines) => taggedLines.orientation === GridInstructionOrientations.vertical
-                    && taggedLines.index === tileIndex+affectedTiles.coordX);
+                    && taggedLines.originalIndex === tileIndex+affectedTiles.coordX);
 
                 if(lineIndex !== -1){
                     affectedLineIndices.push(lineIndex)
