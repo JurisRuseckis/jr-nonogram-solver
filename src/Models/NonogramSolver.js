@@ -3,13 +3,13 @@ import {GridInstructionOrientations} from "./GridInstructions";
 import {DebugOverlay} from "./DebugOverlay";
 
 export class NonogramSolver{
-    constructor(nonogram) {
+    constructor(nonogram, debugOverlay) {
         this.nonogram = nonogram;
         // will need to move some functionalities to nonogram components to ease solver
         // probably will need to remake into partial lines to divide nonogram in smaller sectors
         this.taggedLines = this.TagLines();
 
-        this.debugOverlay = new DebugOverlay();
+        this.debugOverlay = debugOverlay;
 
         // currently will hold whole snapshot as taggedLines, but will need to move to something like git
         // first we push initial state

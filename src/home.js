@@ -93,10 +93,12 @@ export default function init() {
     // then create layer
     let layer = new Konva.Layer();
 
+    const debugOverlay = new DebugOverlay();
+
     // create nonogram from json and graphic layer
     // Nonogram have init phase in constructor
     // maybe i need to create init method
-    const nonogram = new Nonogram(averageJson, layer);
+    const nonogram = new Nonogram(averageJson, layer, debugOverlay);
 
     // add the layer to the stage
     stage.add(layer);
@@ -107,7 +109,7 @@ export default function init() {
     layer.draw();
 
     // draw cross after 1 sek
-    const solver = new NonogramSolver(nonogram);
+    const solver = new NonogramSolver(nonogram, debugOverlay);
 
     // solve
     solver.Solve();

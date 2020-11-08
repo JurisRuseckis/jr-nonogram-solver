@@ -2,10 +2,11 @@ import {InstructionSet} from "./InstructionSet";
 import {Board} from "./Board";
 
 export class Nonogram{
-    constructor(data, layer) {
+    constructor(data, layer, debugOverlay) {
         this.data = data;
         this.width = data.width;
         this.height = data.height;
+        this.debugOverlay = debugOverlay;
 
         this.instructions = new InstructionSet(this.data);
 
