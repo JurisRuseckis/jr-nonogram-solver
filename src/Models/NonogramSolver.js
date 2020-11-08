@@ -4,9 +4,13 @@ import {GridInstructionOrientations} from "./GridInstructions";
 export class NonogramSolver{
     constructor(nonogram) {
         this.nonogram = nonogram;
-        this.moves = [];
         // will need to move some functionalities to nonogram components to ease solver
+        // probably will need to remake into partial lines to divide nonogram in smaller sectors
         this.taggedLines = this.TagLines();
+
+        // currently will hold whole snapshot as taggedLines, but will need to move to something like git
+        // first we push initial state
+        this.history = [this.taggedLines];
     }
 
     CalculateLineValues(){
@@ -132,6 +136,7 @@ export class NonogramSolver{
                 instruction.cross = true;
                 instruction.crossInst.show();
             }
+            return instruction;
         })
 
         this.nonogram.board.UpdateInstructions(
@@ -140,21 +145,22 @@ export class NonogramSolver{
             this.taggedLines[lineIndex].instructions);
     }
 
-    LinkAffectedLines(lineIndex){
+    LinkAffectedLine(lineIndex){
         //get line indices
         let line = this.taggedLines[lineIndex];
         //get tiles
         let tiles;
         if(line.orientation === GridInstructionOrientations.horizontal){
-            tiles = this.nonogram.board.GetTiles(0,line.index,this.nonogram.vertical - 1,line.index)
+            tiles = this.nonogram.board.GetTiles(0,line.index,this.nonogram.height - 1,line.index)
         } else {
             // probably will need to reduce to single array to work properly
             tiles = this.nonogram.board.GetTiles(line.index,0,line.index,this.nonogram.width - 1);
         }
 
-
-        //check tiles & link
-        //add & link crosses
+        // check tiles & link
+        // starting with side tiles
+        // console.log(tiles);
+        // add & link crosses
     }
 
     ResolveAffectedLines(affectedTiles){
@@ -191,9 +197,9 @@ export class NonogramSolver{
 
     HandleAffectedLines(affectedLineIndices, changedLineIndex){
         affectedLineIndices.map((lineIndex) => {
-            // link affected lines
+            // link affected lines without the one filled
             if(lineIndex !== changedLineIndex){
-                this.LinkAffectedLines(lineIndex);
+                this.LinkAffectedLine(lineIndex);
             }
 
             this.CheckInstructions(lineIndex);
