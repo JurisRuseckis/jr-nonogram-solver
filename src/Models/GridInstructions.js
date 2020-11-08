@@ -1,8 +1,8 @@
 import Konva from "konva";
 
 export const GridInstructionOrientations = {
-    horizontal: 0,
-    vertical: 1
+    horizontal: 'horizontal',
+    vertical: 'vertical'
 }
 
 export const GridInstructionLineDefaults = {
