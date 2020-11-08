@@ -58,7 +58,7 @@ export class NonogramSolver{
         let affectedTiles = this.FillLine(lineIndex);
         let affectedLineIndices = this.ResolveAffectedLines(affectedTiles);
         // cross out instructions if needed
-        this.CheckInstructions(affectedLineIndices);
+        this.HandleAffectedLines(affectedLineIndices, lineIndex);
         // add crosses where needed
         // cross out instructions cleared with crosses probably will need recursion here
 
@@ -125,25 +125,36 @@ export class NonogramSolver{
         }
     }
 
-    CheckInstructions(affectedLineIndices){
-        // todo: decide if this method will check filled instructions, or also link affected lines here
-        // todo: tag changed line to avoid doubling links
-        affectedLineIndices.map((lineIndex) => {
-            // the line
-            // this.taggedLines[lineIndex];
-            this.taggedLines[lineIndex].instructions = this.taggedLines[lineIndex].instructions.map((instruction) => {
-                if(instruction.linkedTiles.length === instruction.number){
-                    console.log(instruction.linkedTiles.length, instruction.number);
-                    instruction.cross = true;
-                    instruction.crossInst.show();
-                }
-            })
-
-            this.nonogram.board.UpdateInstructions(
-                this.taggedLines[lineIndex].orientation,
-                this.taggedLines[lineIndex].index,
-                this.taggedLines[lineIndex].instructions);
+    CheckInstructions(lineIndex){
+        // this.taggedLines[lineIndex];
+        this.taggedLines[lineIndex].instructions = this.taggedLines[lineIndex].instructions.map((instruction) => {
+            if(instruction.linkedTiles.length === instruction.number){
+                instruction.cross = true;
+                instruction.crossInst.show();
+            }
         })
+
+        this.nonogram.board.UpdateInstructions(
+            this.taggedLines[lineIndex].orientation,
+            this.taggedLines[lineIndex].index,
+            this.taggedLines[lineIndex].instructions);
+    }
+
+    LinkAffectedLines(lineIndex){
+        //get line indices
+        let line = this.taggedLines[lineIndex];
+        //get tiles
+        let tiles;
+        if(line.orientation === GridInstructionOrientations.horizontal){
+            tiles = this.nonogram.board.GetTiles(0,line.index,this.nonogram.vertical - 1,line.index)
+        } else {
+            // probably will need to reduce to single array to work properly
+            tiles = this.nonogram.board.GetTiles(line.index,0,line.index,this.nonogram.width - 1);
+        }
+
+
+        //check tiles & link
+        //add & link crosses
     }
 
     ResolveAffectedLines(affectedTiles){
@@ -178,8 +189,15 @@ export class NonogramSolver{
         return affectedLineIndices;
     }
 
-    HandleAffectedLines(){
+    HandleAffectedLines(affectedLineIndices, changedLineIndex){
+        affectedLineIndices.map((lineIndex) => {
+            // link affected lines
+            if(lineIndex !== changedLineIndex){
+                this.LinkAffectedLines(lineIndex);
+            }
 
+            this.CheckInstructions(lineIndex);
+        });
     }
 
     Solve(){
