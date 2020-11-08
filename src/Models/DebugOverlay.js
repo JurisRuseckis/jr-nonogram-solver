@@ -14,13 +14,14 @@ export class DebugOverlay{
         document.body.append(this.overlay);
     }
 
-    buildTable(tableObj){
-        let headerString = `<thead><tr>${tableObj.headers.map((header)=>{
+    buildTable(tableArr){
+        console.log(tableArr);
+        let headerString = `<thead><tr>${Object.keys(tableArr[0]).map((header)=>{
             return `<th>${header}</th>`;
         }).join("")}</tr></thead>`;
 
-        let bodyString = `<tbody>${tableObj.rows.map((row)=>{
-            return `<tr>${row.map((cell)=>{
+        let bodyString = `<tbody>${tableArr.map((row)=>{
+            return `<tr>${Object.values(row).map((cell)=>{
                 return `<td>${cell}</td>`;
             }).join("")}</tr>`;
         }).join("")}</tbody>`
