@@ -106,14 +106,6 @@ export default function init() {
     // but somehow need to pass event from board that it is updated and layer needs to be redrawn
     layer.draw();
 
-    const debug = new DebugOverlay();
-    debug.buildTable(
-    ["id","name"],
-    [
-        ["1", "test"],
-        ["2", "lol"],
-    ]);
-
     // draw cross after 1 sek
     const solver = new NonogramSolver(nonogram);
 
