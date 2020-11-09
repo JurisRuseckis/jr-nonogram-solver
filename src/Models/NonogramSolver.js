@@ -9,7 +9,8 @@ export class NonogramSolver{
         // todo: will need to move some functionalities to nonogram components to ease solver
         // todo: will need to remake into partial lines to divide nonogram in smaller sectors
         // todo: make seperate class for lines to execute lineSpecific operations
-        this.taggedLines = this.CalculateLineValues();
+        this.taggedLines = []
+        this.CalculateLineValues();
 
         // currently will hold whole snapshot as taggedLines, but will need to move to something like git
         // first we push initial state
@@ -22,50 +23,58 @@ export class NonogramSolver{
             ? this.TagLines()
             : affectedLines;
 
+
+        // todo: make method for line calculation
+        // todo: divide in oneTime and repeatable calculatables
         lines = lines.map((line) => {
 
             // grid tiles
-            let tileCounts = {
-                empty: 0,
-                filled: 0,
-                crossed: 0,
-            }
+            line.empty = 0;
+            line.filled = 0;
+            line.crossed = 0;
 
             let tiles = this.GetLineTiles(line);
-
+            line.total = tiles.length;
             tiles.map((tile) => {
                 if(tile.type === tileType.cross){
-                    tileCounts.crossed ++;
+                    line.crossed ++;
                 } else if (tile.type === tileType.filled){
-                    tileCounts.filled ++;
+                    line.filled ++;
                 } else {
-                    tileCounts.empty ++;
+                    line.empty ++;
                 }
             });
 
             // instruction tiles
-            line.minLineSum =  line.instructions.reduce((sum, instruction) => {
-                return sum + instruction.number;
-            }, 0) + (line.instructions.length - 1);
-
             line.minLineSum = 0
             line.largestInstruction = line.instructions.reduce((max, instruction) => {
-                line.minLineSum += instruction.number();
+                line.minLineSum += instruction.number;
                 return Math.max( max, instruction.number );
             }, 0)
+
+            line.fillSum = line.minLineSum;
             line.minLineSum += line.instructions.length - 1;
+
+
+            // todo: make method that calculates value
+            line.value = 0;
+            if(line.empty !== 0){
+                line.value += line.minLineSum / line.total;
+                line.value += line.filled / line.fillSum;
+            }
+
 
             return line;
         })
-
+        console.log(lines);
         //this will calculate which line will be next
         lines = lines.sort((a,b) => {
-            return b.minLineSum - a.minLineSum;
+            return b.value - a.value;
         });
 
-        // this.PrintToDebug();
+        this.taggedLines = lines;
 
-        return lines;
+        this.PrintDebug();
     }
 
     TagLines(){
@@ -106,6 +115,21 @@ export class NonogramSolver{
         }
     }
 
+    PrintDebug(){
+        this.debugOverlay.buildTable(this.taggedLines.map((line) => {
+            return {
+                id: line.id,
+                fillSum: line.fillSum,
+                minLineSum: line.minLineSum,
+                largestInstruction: line.largestInstruction,
+                empty: line.empty,
+                filled: line.filled,
+                crossed: line.crossed,
+                value: line.value
+            };
+        }));
+    }
+
     MakeMove(){
         // find if there is something to fill
         // todo: figure out way to calculate lineValues to pick line to fill
@@ -120,7 +144,7 @@ export class NonogramSolver{
         this.HandleAffectedLines(affectedLineIndices, lineIndex);
         // add crosses where needed
         // cross out instructions cleared with crosses probably will need recursion here
-
+        this.CalculateLineValues();
 
         // validate move
         // register move
@@ -263,7 +287,9 @@ export class NonogramSolver{
 
     Solve(){
         // need to add condition somehow
-        this.MakeMove();
+        setTimeout(()=>{
+            this.MakeMove();
+        }, 1000);
 
         // console.log(this.nonogram.board.GetTiles(1,1,4,3));
         // horizontal line
