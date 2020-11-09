@@ -15,7 +15,6 @@ export class DebugOverlay{
     }
 
     buildTable(tableArr){
-        console.log(tableArr);
         let headerString = `<thead><tr>${Object.keys(tableArr[0]).map((header)=>{
             return `<th>${header}</th>`;
         }).join("")}</tr></thead>`;
