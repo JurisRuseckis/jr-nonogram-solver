@@ -66,7 +66,7 @@ export class NonogramSolver{
 
             return line;
         })
-        console.log(lines);
+
         //this will calculate which line will be next
         lines = lines.sort((a,b) => {
             return b.value - a.value;
@@ -287,9 +287,11 @@ export class NonogramSolver{
 
     Solve(){
         // need to add condition somehow
-        setTimeout(()=>{
-            this.MakeMove();
-        }, 1000);
+        // setTimeout(()=>{
+        //     this.MakeMove();
+        // }, 1000);
+
+        this.DoSimpleBoxesTechnique();
 
         // console.log(this.nonogram.board.GetTiles(1,1,4,3));
         // horizontal line
@@ -302,5 +304,58 @@ export class NonogramSolver{
         // while (this.MakeMove()){
         //
         // }
+    }
+
+    DoSimpleBoxesTechnique(){
+        this.taggedLines.map((line, lineindex) => {
+            console.group(line.id);
+            let lineScribble = this.ScribbleIndices(lineindex);
+            let diff = line.total - lineScribble.length;
+            if(diff>0){
+                // populate variations
+                let leftover = Array.from({length: diff}, () =>(-1));
+                let leftVariation = lineScribble.slice().concat(leftover);
+                let rightVariation = lineScribble.slice();
+                leftover.map((dif) => {
+                    rightVariation.unshift(dif);
+                })
+
+                console.log(leftVariation);
+                console.log(rightVariation);
+                //find intersections
+                let overlap = leftVariation.map((leftTile, leftIndex) => {
+                    if(leftTile === rightVariation[leftIndex]){
+                        return leftTile
+                    }
+                    return -1;
+                })
+                console.log(overlap)
+
+                // link intersections with instructions
+            } else {
+                console.log(`${line.id} is a full line`);
+            }
+            console.groupEnd();
+        })
+    }
+
+    ScribbleIndices(lineIndex){
+        let coordinatePointer = 0;
+        let fill = [];
+
+        this.taggedLines[lineIndex].instructions.map((instruction,instructionIndex)=>{
+
+            fill = fill.concat(Array.from({length: instruction.number}, () =>(instructionIndex)))
+
+            coordinatePointer += instruction.number;
+
+            if(instructionIndex < this.taggedLines[lineIndex].instructions.length - 1 ){
+                fill.push(-1);
+                coordinatePointer++;
+            }
+
+        })
+
+        return fill;
     }
 }
