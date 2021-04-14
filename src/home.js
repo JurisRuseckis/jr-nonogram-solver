@@ -77,6 +77,7 @@ const averageJson = {
     }
 };
 
+// todo: divide in init & update methods
 export default function init() {
 
     document.body.style.margin = "0";
